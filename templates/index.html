@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediksi Diabetes</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap");
+      body {
+        font-family: "Raleway", sans-serif;
+        background-color: #f5f5f5;
+      }
+      #title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      .container {
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      form {
+        width: 60%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      form > div {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn-predict {
+        background-color: #2d9cdb;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0 auto;
+      }
+
+      #result {
+        margin: 20px auto;
+        width: 60%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #result > h2 {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      #result > p {
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h1 id="title">Heart Attack Prediction</h1>
+    </nav>
+    <main>
+      <div class="container">
+        <form action="/predict" method="POST" id="form">
+          <div>
+            <label for="sex">Sex (0 = female, 1 = male)</label>
+            <input type="number" name="sex" id="sex" />
+          </div>
+          <div>
+            <label for="cp">Chest Pain</label>
+            <input type="number" name="cp" id="cp" />
+          </div>
+          <div>
+            <label for="trtbps">Resting Blood Pressure</label>
+            <input type="number" name="trtbps" id="trtbps" />
+          </div>
+          <div>
+            <label for="chol"
+              >Cholestoral in mg/dl Fetched Via BMI Sensor</label
+            >
+            <input type="number" name="chol" id="chol" />
+          </div>
+          <div>
+            <label for="fbs">Fasting Blood Sugar (120> mg/dl = 1)</label>
+            <input type="number" name="fbs" id="fbs" />
+          </div>
+          <div>
+            <label for="restecg">Resting Electrocardiographic Results</label>
+            <input type="number" name="restecg" id="restecg" />
+          </div>
+          <div>
+            <label for="thalachh"
+              >Maximum Heart Rate Achieved</label>
+            <input
+              type="number"
+              name="thalachh"
+              id="thalachh"
+            />
+          </div>
+          <div>
+            <label for="age">Age</label>
+            <input type="number" name="age" id="age" />
+          </div>
+          <div>
+            <label for="exng">Exercise Induced Angina (1 = yes or 0 = no)</label>
+            <input type="number" name="exng" id="exng" />
+          </div>
+          <div>
+            <label for="oldpeak">Previous Peak</label>
+            <input type="number" name="oldpeak" step="0.1" id="oldpeak" />
+          </div>
+          <div>
+            <label for="slp">Slope (0 - 2)</label>
+            <input type="number" name="slp" id="slp" />
+          </div>
+          <div>
+            <label for="caa">Number of Major Vessels (0 - 3)</label>
+            <input type="number" name="caa" id="caa" />
+          </div>
+          <div>
+            <label for="thall">Thal Rate</label>
+            <input type="number" name="thall" id="thall" />
+          </div>
+          <div>
+            <button type="submit" class="btn-predict">Predict</button>
+          </div>
+        </form>
+        <div id="result">
+          <h2>Result</h2>
+          <p id="result-prediction">
+            Hasil prediksi :
+            <span id="prediction"></span>
+          </p>
+        </div>
+      </div>
+    </main>
+    <script>
+      const form = document.querySelector("#form");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        fetch("/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data.result);
+            const prediction = document.querySelector("#prediction");
+            prediction.innerHTML = data.result;
+          });
+      });
+    </script>
+  </body>
+</html>
